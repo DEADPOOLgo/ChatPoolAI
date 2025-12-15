@@ -134,6 +134,27 @@
           "timestamp": "2025-12-14T20:06:35.149Z"
         }
       ]
+    },
+    {
+      "id": "bd1e4bf0-9bb6-4fbf-8eba-051b680f193b",
+      "userId": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "title": "What is a computer ?",
+      "createdAt": "2025-12-15T17:56:51.929Z",
+      "updatedAt": "2025-12-15T17:57:02.402Z",
+      "messages": [
+        {
+          "id": "5ba44ac8-3b4f-4ee8-85cd-c6500a46f176",
+          "role": "user",
+          "text": "What is a computer ?",
+          "timestamp": "2025-12-15T17:56:51.930Z"
+        },
+        {
+          "id": "85f692c6-e885-47a5-9a08-3f6549993f5a",
+          "role": "assistant",
+          "text": "A computer is an **electronic device** that **manipulates information, or data**.\n\nIn simpler terms, you can think of it as a super-fast, super-accurate machine that can:\n\n1.  **Take in information (Input):** Like typing on a keyboard, clicking a mouse, or data from a sensor.\n2.  **Process that information (Processing):** It performs calculations, organizes data, and transforms it based on a set of instructions.**Give out information (Output):** It displays results on a screen, prints documents, plays sounds, or controls other devices.\n\n**Key Characteristics:**\n\n*   **Programmable:** Computers aren't intelligent on their own. They follow a from simple calculations to complex simulations, word processing, graphic design, communication, entertainment, and controlling robots or vehicles.\n*   **Speed and Accuracy:** They can process vast amounts of data and perform calculations at incredible speeds, with very high accuracy.\n\n**Analogy:**\n\nImagine a very intelligent chef.\n*   The **ingredients** are the **input data**.\n*   The **recipe** is the **program/software**.\n*   The **chef's actions** in many forms, from the obvious to the hidden:\n\n*   **Desktops & Laptops:** Traditional personal computers.\n*   **Tablets & Smartphones:** Portable devices that are essentially small, powerful computers.\n*   ** cars, washing machines, smart TVs, medical equipment, and industrial machinery.\n\nIn essence, a computer is a fundamental tool of the modern world, designed to extend our ability to work with information and automate tasks.",
+          "timestamp": "2025-12-15T17:57:02.402Z"
+        }
+      ]
     }
   ]
 }

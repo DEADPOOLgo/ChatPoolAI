@@ -1,6 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Send, LogOut, User, Bot, MessageSquare, Plus, MessageCircle } from 'lucide-react';
+import { Send, LogOut, User, Bot, MessageSquare, Plus, MessageCircle, Copy, Check } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 export default function Chat() {
     const [messages, setMessages] = useState([]);
@@ -9,13 +11,18 @@ export default function Chat() {
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const [user, setUser] = useState(null);
+    const [ws, setWs] = useState(null);
+    const [copiedIndex, setCopiedIndex] = useState(null);
+
     const messagesEndRef = useRef(null);
     const navigate = useNavigate();
 
+    // Initialize Auth & WS
     useEffect(() => {
         checkAuth();
     }, []);
 
+    // Scroll handling
     useEffect(() => {
         scrollToBottom();
     }, [messages]);
@@ -33,9 +40,107 @@ export default function Chat() {
             } else {
                 setUser(data.user);
                 fetchThreads();
+                connectWebSocket(data.user);
             }
         } catch (e) {
             navigate('/login');
+        }
+    };
+
+    const connectWebSocket = (currentUser) => {
+        // Assume backend is on same host, different port (or proxy)
+        // In this setup: Frontend :7321, Backend :7320 (proxied via /api)
+        // Since we are proxying /api, we might not proxy WS automatically with Vite unless configured.
+        // Let's assume standard Vite proxy supports WS or direct connect.
+        // If Vite proxy is set up for /api -> http://localhost:7320, 
+        // WS endpoint would be ws://localhost:7320
+
+        const wsUrl = 'ws://localhost:7320';
+        const socket = new WebSocket(wsUrl);
+
+        socket.onopen = () => {
+            console.log('WebSocket Connected');
+        };
+
+        socket.onmessage = (event) => {
+            try {
+                const data = JSON.parse(event.data);
+                handleWsMessage(data);
+            } catch (e) {
+                console.error("WS Parse Error", e);
+            }
+        };
+
+        socket.onclose = () => {
+            console.log('WebSocket Disconnected');
+            // Reconnect logic could go here
+        };
+
+        setWs(socket);
+    };
+
+    const handleWsMessage = (data) => {
+        if (data.type === 'user_message_saved') {
+            const { message, threadId, newThread } = data;
+
+            // If new thread started
+            if (newThread) {
+                setActiveThreadId(threadId);
+                setThreads(prev => [newThread, ...prev]);
+            }
+
+            // Ensure user message is shown (we optimistically added it, but let's confirm or update ID)
+            // Ideally we rely on optimistic update mostly.
+        }
+        else if (data.type === 'stream_start') {
+            // Create a placeholder for AI response if not exists or start accumulating
+            setMessages(prev => {
+                // Check if last message is already an empty AI message? 
+                // Actually, let's just push a fresh empty AI message or "Thinking..."
+                return [...prev, { role: 'assistant', text: "", isStreaming: true }];
+            });
+            setLoading(true);
+        }
+        else if (data.type === 'stream_chunk') {
+            setMessages(prev => {
+                const newArr = [...prev];
+                const lastMsg = newArr[newArr.length - 1];
+                if (lastMsg && lastMsg.role === 'assistant') {
+                    // Update last message
+                    newArr[newArr.length - 1] = {
+                        ...lastMsg,
+                        text: lastMsg.text + data.text
+                    };
+                }
+                return newArr;
+            });
+        }
+        else if (data.type === 'stream_done') {
+            setLoading(false);
+            setMessages(prev => {
+                const newArr = [...prev];
+                const lastMsg = newArr[newArr.length - 1];
+                if (lastMsg && lastMsg.role === 'assistant') {
+                    newArr[newArr.length - 1] = {
+                        ...lastMsg,
+                        // Ensure we rely on fullMessage just in case, or just streaming result
+                        // data.fullMessage contains db record.
+                        ...data.fullMessage,
+                        isStreaming: false
+                    };
+                }
+                return newArr;
+            });
+
+            // Re-order threads (move current to top)
+            setThreads(prev => {
+                const filtered = prev.filter(t => t.id !== activeThreadId);
+                const current = prev.find(t => t.id === activeThreadId);
+                if (current) {
+                    return [{ ...current, updatedAt: new Date().toISOString() }, ...filtered];
+                }
+                return prev;
+            });
         }
     };
 
@@ -45,10 +150,6 @@ export default function Chat() {
             if (res.ok) {
                 const data = await res.json();
                 setThreads(data);
-                // Optionally load the most recent thread or stay on 'new chat'
-                if (data.length > 0 && !activeThreadId) {
-                    // selectThread(data[0].id); // Uncomment to auto-select last thread
-                }
             }
         } catch (e) {
             console.error("Failed to load threads");
@@ -79,51 +180,34 @@ export default function Chat() {
 
     const handleSend = async (e) => {
         e.preventDefault();
-        if (!input.trim()) return;
+        if (!input.trim() || !ws) return;
 
-        const userMsg = { role: 'user', text: input, timestamp: new Date().toISOString() };
+        const text = input;
+        const userMsg = { role: 'user', text: text, timestamp: new Date().toISOString() };
+
+        // Optimistic UI
         setMessages(prev => [...prev, userMsg]);
         setInput('');
-        setLoading(true);
+        setLoading(true); // Will act as "waiting for stream start"
 
-        try {
-            const res = await fetch('/api/chat/message', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ message: userMsg.text, threadId: activeThreadId })
-            });
+        // Send via WS
+        ws.send(JSON.stringify({
+            type: 'message',
+            text: text,
+            threadId: activeThreadId,
+            userId: user?.id
+        }));
+    };
 
-            const data = await res.json();
-            if (res.ok) {
-                setMessages(prev => [...prev, data.botMessage]);
-
-                // If we just started a new thread, set it as active and update list
-                if (data.newThread) {
-                    setActiveThreadId(data.threadId);
-                    setThreads(prev => [data.newThread, ...prev]);
-                } else {
-                    // Re-order threads locally (move current to top)
-                    setThreads(prev => {
-                        const filtered = prev.filter(t => t.id !== activeThreadId);
-                        const current = prev.find(t => t.id === activeThreadId);
-                        if (current) {
-                            return [{ ...current, updatedAt: new Date().toISOString() }, ...filtered];
-                        }
-                        return prev;
-                    })
-                }
-            } else {
-                setMessages(prev => [...prev, { role: 'assistant', text: "Error: " + (data.error || "Failed to send") }]);
-            }
-        } catch (e) {
-            setMessages(prev => [...prev, { role: 'assistant', text: "Error: Could not reach server." }]);
-        } finally {
-            setLoading(false);
-        }
+    const handleCopy = (text, idx) => {
+        navigator.clipboard.writeText(text);
+        setCopiedIndex(idx);
+        setTimeout(() => setCopiedIndex(null), 2000);
     };
 
     const handleLogout = async () => {
         await fetch('/api/auth/logout', { method: 'POST' });
+        if (ws) ws.close();
         navigate('/login');
     };
 
@@ -259,20 +343,43 @@ export default function Chat() {
                                 </div>
 
                                 <div style={{
+                                    position: 'relative',
                                     background: msg.role === 'user' ? 'var(--message-user-bg)' : 'var(--message-bot-bg)',
                                     padding: '1rem',
                                     borderRadius: '1rem',
                                     borderTopRightRadius: msg.role === 'user' ? '0' : '1rem',
                                     borderTopLeftRadius: msg.role === 'user' ? '1rem' : '0',
                                     lineHeight: '1.5',
-                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+                                    boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+                                    overflowWrap: 'break-word',
+                                    wordBreak: 'break-word',
+                                    minWidth: '150px' // Ensure space for copy button
                                 }}>
-                                    {msg.text}
+
+                                    {/* Copy Button */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '0.5rem',
+                                        right: '0.5rem',
+                                        opacity: 0.7,
+                                        cursor: 'pointer'
+                                    }} onClick={() => handleCopy(msg.text, idx)}>
+                                        {copiedIndex === idx ?
+                                            <Check size={14} color="var(--text-secondary)" /> :
+                                            <Copy size={14} color="var(--text-secondary)" />
+                                        }
+                                    </div>
+
+                                    <div style={{ paddingRight: '1rem' }}>
+                                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                                            {msg.text}
+                                        </ReactMarkdown>
+                                    </div>
                                 </div>
                             </div>
                         ))
                     )}
-                    {loading && (
+                    {loading && messages.length > 0 && messages[messages.length - 1].role !== 'assistant' && (
                         <div className="animate-fade-in" style={{ alignSelf: 'flex-start', marginLeft: '3rem', color: 'var(--text-secondary)' }}>
                             Thinking...
                         </div>
@@ -303,7 +410,7 @@ export default function Chat() {
                                 outline: 'none',
                                 fontSize: '1rem'
                             }}
-                            disabled={loading}
+                            disabled={loading && !ws} // Allow typing if we have WS but maybe busy (concurrent?) - simple blocking for now
                         />
                         <button
                             type="submit"
