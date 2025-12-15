@@ -1,0 +1,139 @@
+{
+  "users": [
+    {
+      "id": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "email": "admin@gmail.com",
+      "name": "Debojyoti",
+      "password": "$2b$10$iRUU19SPQM8dAUxZVNcf0.SQoOaEnBu65qvgcL/IyfAM2gZxbmHdO",
+      "createdAt": "2025-12-14T19:51:13.859Z"
+    },
+    {
+      "id": "c50ca495-4d53-4a24-b34f-cb472815428c",
+      "email": "sd@gmail.com",
+      "name": "SD",
+      "password": "$2b$10$Zq4YfEwAwyGzToqVjkq3ru4LS3K.HaEEuSfHbc883Fi1tfkwmeWSC",
+      "createdAt": "2025-12-14T20:06:15.383Z"
+    }
+  ],
+  "chats": [
+    {
+      "id": "2fb9c860-587e-467f-9217-a2e40ba3b225",
+      "userId": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "role": "user",
+      "text": "hhsf",
+      "timestamp": "2025-12-14T19:51:40.175Z"
+    },
+    {
+      "id": "94b5de05-8066-45f9-927b-46323cbede76",
+      "userId": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "role": "assistant",
+      "text": "Error from AI Provider: API key not valid. Please pass a valid API key.",
+      "timestamp": "2025-12-14T19:51:41.429Z"
+    },
+    {
+      "id": "c4686a4f-11ff-4006-9366-dc8b795cca6c",
+      "userId": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "role": "user",
+      "text": "hi",
+      "timestamp": "2025-12-14T19:53:27.151Z"
+    },
+    {
+      "id": "f4c47be5-bf6e-412a-9fac-c635651278d7",
+      "userId": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "role": "assistant",
+      "text": "Error from AI Provider: models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+      "timestamp": "2025-12-14T19:53:27.819Z"
+    },
+    {
+      "id": "9e85f9c9-a5b1-4762-845d-55e454af2cad",
+      "userId": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "role": "user",
+      "text": "What is the distance of moon from earth ",
+      "timestamp": "2025-12-14T19:57:22.564Z"
+    },
+    {
+      "id": "d23d0335-0970-4622-b759-68dd07bb4323",
+      "userId": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "role": "assistant",
+      "text": "The average distance from the Earth to the Moon is approximately **384,400 kilometers (238,900 miles)**.\n\nHowever, this distance varies because their orbits are elliptical:\n*   **Perigee** (closest point): Around 363,104 km (225,623 miles)\n*   **Apogee** (farthest point): Around 405,696 km (252,088 miles)",
+      "timestamp": "2025-12-14T19:57:25.423Z"
+    }
+  ],
+  "threads": [
+    {
+      "id": "403e45cc-8590-4572-bb45-a7ac7711230c",
+      "userId": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "title": "hi",
+      "createdAt": "2025-12-14T20:03:06.587Z",
+      "updatedAt": "2025-12-14T20:05:06.175Z",
+      "messages": [
+        {
+          "id": "5e7255f3-35c8-4e6b-bc8f-6431d37a7c00",
+          "role": "user",
+          "text": "hi",
+          "timestamp": "2025-12-14T20:03:06.591Z"
+        },
+        {
+          "id": "57039b10-8d3f-4f50-ab84-beb2e322d9e0",
+          "role": "assistant",
+          "text": "Error from AI Provider: models/gemini-1.5-flash is not found for API version v1beta, or is not supported for generateContent. Call ListModels to see the list of available models and their supported methods.",
+          "timestamp": "2025-12-14T20:03:07.598Z"
+        },
+        {
+          "id": "2041ac5b-e196-4315-b512-35a88f941f38",
+          "role": "user",
+          "text": "hi",
+          "timestamp": "2025-12-14T20:05:04.167Z"
+        },
+        {
+          "id": "ba227965-6d71-4c07-98c1-d33398a2030d",
+          "role": "assistant",
+          "text": "Hello! How can I help you today?",
+          "timestamp": "2025-12-14T20:05:06.175Z"
+        }
+      ]
+    },
+    {
+      "id": "4951e373-ebe4-4be7-bfde-ee02765d9cac",
+      "userId": "473bf65b-d0ea-4ad4-b3c7-ecd28fb77bf5",
+      "title": "What is the distance of sun fr...",
+      "createdAt": "2025-12-14T20:05:37.084Z",
+      "updatedAt": "2025-12-14T20:05:41.081Z",
+      "messages": [
+        {
+          "id": "383d0ed4-f41f-4820-95dd-d41b0500bc4c",
+          "role": "user",
+          "text": "What is the distance of sun from earth",
+          "timestamp": "2025-12-14T20:05:37.085Z"
+        },
+        {
+          "id": "f53e70ca-69e2-4ff6-8696-975fc7adc448",
+          "role": "assistant",
+          "text": "The average distance from the Sun to Earth is approximately **150 million kilometers (km)** or about **93 million miles**.\n\nThis distance is also defined as **1 Astronomical Unit (AU)**, which is a standard unit of measurement used in astronomy for distances within our solar system.\n\nIt's important to note that this is an average, as the Earth's orbit around the Sun is not a perfect circle but an ellipse:\n*   At its closest point (perihelion), the Earth is about 147 million km (91.4 million miles) from the Sun.\n*   At its farthest point (aphelion), the Earth is about 152 million km (94.5 million miles) from the Sun.",
+          "timestamp": "2025-12-14T20:05:41.080Z"
+        }
+      ]
+    },
+    {
+      "id": "f3c01be9-6f5b-4613-b078-a3d440de5f61",
+      "userId": "c50ca495-4d53-4a24-b34f-cb472815428c",
+      "title": "What it AI ?",
+      "createdAt": "2025-12-14T20:06:26.989Z",
+      "updatedAt": "2025-12-14T20:06:35.149Z",
+      "messages": [
+        {
+          "id": "6123a9f1-ba1e-4a94-ba67-915eb196ea65",
+          "role": "user",
+          "text": "What it AI ?",
+          "timestamp": "2025-12-14T20:06:26.990Z"
+        },
+        {
+          "id": "c0472428-ffd5-49b5-b4c8-d48217df1cc4",
+          "role": "assistant",
+          "text": "AI stands for **Artificial Intelligence**.\n\nIn its simplest terms, AI refers to the simulation of human intelligence in machines that are programmed to think like humans and mimic their actions.\n\nThe goal of AI is to enable machines to perform tasks that typically require human intelligence, such as:\n\n*   **Learning:** Acquiring information and rules for using the information.\n*   **Reasoning:** Using rules to reach approximate or definite conclusions.\n*   **Problem-solving:** Finding solutions to complex situations.\n*   **Perception:** Understanding and interpreting the world through sensory data (like sight and sound).\n*   **Language understanding:** Processing and generating human language (Natural Language Processing).\n*   **Decision-making:** Choosing the best course of action.\n\n**Key Concepts and Types of AI:**\n\n1.  **Machine Learning (ML):** A subset of AI that focuses on enabling systems to learn from data, identify patterns, and make decisions with minimal human intervention. Instead of being explicitly programmed, ML algorithms \"learn\" by being fed large amounts of data.\n\n2.  **Deep Learning (DL):** A subfield of machine learning that uses artificial neural networks with multiple layers (hence \"deep\") to learn from vast amounts of data. It's particularly effective for tasks like image recognition, speech recognition, and natural language processing.\n\n3.  **Narrow AI (or Weak AI):** This is the AI we have today. It is designed and trained for a specific task.\n    *   **Examples:** Voice assistants (Siri, Alexa), recommendation engines (Netflix, Amazon), self-driving cars (which excel at driving but can't write a novel), spam filters, chess programs.\n\n4.  **General AI (or Strong AI / Artificial General Intelligence - AGI):** This is hypothetical AI that would possess cognitive abilities like a human being, able to understand, learn, and apply intelligence to any intellectual task. It's still a subject of research and science fiction.\n\n5.  **Superintelligence:** A hypothetical AI that would surpass human intelligence across all fields, including creativity, general knowledge, and problem-solving.\n\n**Where you encounter AI in daily life:**\n\n*   **Voice assistants:** Siri, Alexa, Google Assistant\n*   **Recommendation engines:** What to watch next on Netflix, products to buy on Amazon\n*   **Self-driving cars:** Tesla, Waymo\n*   **Fraud detection:** Banks using AI to spot unusual transactions\n*   **Medical diagnosis:** Helping doctors identify diseases from images\n*   **Spam filters:** Detecting and blocking unwanted emails\n*   **Facial recognition:** Unlocking your phone, security systems\n*   **Online customer support:** Chatbots\n\nAI is a rapidly evolving field that is transforming various industries and aspects of our lives, from healthcare and finance to entertainment and transportation.",
+          "timestamp": "2025-12-14T20:06:35.149Z"
+        }
+      ]
+    }
+  ]
+}
